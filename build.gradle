@@ -5,6 +5,7 @@ plugins {
     id 'maven-publish'
     id 'com.jfrog.bintray' version '1.7.3'
 }
+apply plugin: 'idea'
 
 description = 'A template project of Gradle'
 group = 'org.hidetake'
@@ -28,6 +29,15 @@ dependencies {
     testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
     testRuntime 'cglib:cglib-nodep:3.2.5'
     testRuntime 'org.objenesis:objenesis:2.6'
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.7'
+    implementation("com.google.guava:guava:29.0-jre")
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.16'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 }
 
 /*
