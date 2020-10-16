@@ -1,17 +1,24 @@
-import lombok.AllArgsConstructor;
-
-import java.util.HashMap;
-import java.util.Map;
+import lombok.Builder;
 
 /**
  * ShelfManager in charge of order assignment
  */
-@AllArgsConstructor
+@Builder
 public class OrderManager {
-  private final Map<Temp, Shelf> shelves = new HashMap<>();
+  private final Shelf[] shelves;
 
-  /**
-   * Keep track of current time, in sec. Starts with 0.
-   */
-  private int time = 0;
+  public void assign(Order order) {
+    for (Shelf shelf : shelves) {
+      if (shelf.typeMatch(order) || shelf.isOverflow()) {
+        if (!shelf.hasCapacity()) {
+          if (shelf.isOverflow()) {
+            shelf.randomDiscard();
+          } else {
+            continue; // Skip this shelf
+          }
+        }
+        shelf.put(order);
+      }
+    }
+  }
 }
