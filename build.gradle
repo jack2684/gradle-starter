@@ -33,11 +33,15 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.7'
     implementation("com.google.guava:guava:29.0-jre")
+
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.16'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    compile "org.slf4j:slf4j-simple:1.6.1"
 }
 
 /*

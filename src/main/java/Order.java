@@ -1,9 +1,6 @@
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Value;
 
 /** Order class host the properties of an order. */
 @Data
@@ -14,17 +11,22 @@ public class Order {
   @JsonProperty("name")
   String name;
 
-  /** frozen|cold|hot */
   @JsonProperty("temp")
   Temp temp;
 
-  /** TODO: add doc */
+  /** Shelf wait max duration (seconds) */
   @JsonProperty("shelfLife")
   int shelfLife;
 
-  /** TODO: add doc */
+  /** Value deterioration modifier */
   @JsonProperty("decayRate")
   float decayRate;
+
+  /**
+   * Value of on order degrades over time when below zero it should be thrown away
+   */
+  @JsonIgnore
+  int value;
 
   public Order(
       @JsonProperty("id") String id,
@@ -37,14 +39,5 @@ public class Order {
     this.temp = temp;
     this.shelfLife = shelfLife;
     this.decayRate = decayRate;
-  }
-
-  public enum Temp {
-    @JsonProperty("hot")
-    HOT,
-    @JsonProperty("frozen")
-    FROZEN,
-    @JsonProperty("cold")
-    COLD;
   }
 }
