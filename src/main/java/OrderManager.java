@@ -9,9 +9,9 @@ public class OrderManager {
 
   public void assign(Order order) {
     for (Shelf shelf : shelves) {
-      if (shelf.typeMatch(order) || shelf.isOverflow()) {
+      if (shelf.typeMatch(order) || shelf.isOverflowShelf()) {
         if (!shelf.hasCapacity()) {
-          if (shelf.isOverflow()) {
+          if (shelf.isOverflowShelf()) {
             shelf.randomDiscard();
           } else {
             continue; // Skip this shelf
@@ -20,5 +20,17 @@ public class OrderManager {
         shelf.put(order);
       }
     }
+  }
+
+  /**
+   * @param t current time
+   * @return
+   */
+  public int updatePickedUpAndExpired(long t) {
+    int cnt = 0;
+    for (Shelf shelf : shelves) {
+      cnt += shelf.updatePickedUpAndExpired(t);
+    }
+    return cnt;
   }
 }

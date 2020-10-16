@@ -42,6 +42,9 @@ dependencies {
 
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
     compile "org.slf4j:slf4j-simple:1.6.1"
+
+    // https://mvnrepository.com/artifact/me.tongfei/progressbar
+    compile group: 'me.tongfei', name: 'progressbar', version: '0.9.0'
 }
 
 /*

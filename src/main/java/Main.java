@@ -1,5 +1,7 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -16,13 +18,20 @@ public class Main {
   /** By default, the system ingest 2 orders per second. */
   public static final int DEFAULT_INGESTION_RATE = 2;
 
+  @Data
+  @NoArgsConstructor
+  static class CliArgs {
+    /**
+     * Volume of incoming order
+     */
+    float ingestionRate = DEFAULT_INGESTION_RATE;
+  }
+
   public static void main(String[] args) throws IOException {
     log.info("=========Reading CLI inputs=========");
-    int ingestionRate = DEFAULT_INGESTION_RATE;
-    if (args.length > 0) {
-      ingestionRate = Integer.parseInt(args[0]);
-    }
-    log.info("Order ingestion rate: {}/sec", ingestionRate);
+    CliArgs cliArgs = parseArg(args);
+
+    log.info("Order ingestion rate: {}/sec", cliArgs);
 
     log.info("=========Loading Orders=========");
     OrderBasic[] orders = loadOrders();
@@ -34,7 +43,15 @@ public class Main {
     OrderManager manager = OrderManager.builder().shelves(shelves).build();
 
     log.info("=========Simulation Being=========");
-    Simulation.init(manager, orders, ingestionRate).run();
+    Simulation.init(manager, orders, cliArgs.getIngestionRate()).run();
+  }
+
+  private static CliArgs parseArg(String[] args) {
+    CliArgs cliArgs = new CliArgs();
+    if (args.length > 0) {
+      cliArgs.ingestionRate = Float.parseFloat(args[0]);
+    }
+    return cliArgs;
   }
 
   private static Shelf[] initShelves() {
