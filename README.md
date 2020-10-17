@@ -1,4 +1,4 @@
-data.Order simulation 
+Order simulation 
 ==================
 Author: Junjie Guan
 
@@ -54,4 +54,11 @@ data.Order simulation.Simulation 100% │█████████████
    11           0           0              0               0 |        96         2     34 |    132
 
 =========Done=========
+```
+
+Contribute
+---------------
+After making modification, use this command to run test:
+```
+./gradlew test
 ```
