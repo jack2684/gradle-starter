@@ -5,24 +5,31 @@ import lombok.Builder;
 public class OrderManager {
   private final Shelf[] shelves;
 
-  public void assign(Order order) {
+  /**
+   * return how many were discarded due to overflow
+   */
+  public int assign(Order order) {
     // Put on a suitable shelf
     for (Shelf shelf : shelves) {
       if (shelf.typeMatch(order) && shelf.hasCapacity()) {
         shelf.put(order);
-        return;
+        return 0;
       }
     }
 
     // If no shelf available, put on overflow shelf
+    int discarded = 0;
     for (Shelf shelf : shelves) {
       if (shelf.isOverflowShelf()) {
         if (!shelf.hasCapacity()) {
           shelf.randomDiscard();
+          discarded = 1;
         }
         shelf.put(order);
+        return discarded;
       }
     }
+    return 0;
   }
 
   /**
@@ -38,7 +45,7 @@ public class OrderManager {
     }
 
     snapshot.inc(SimulationReport.Place.DELIVERY, update.pickedUp);
-    snapshot.inc(SimulationReport.Place.TRASH, update.discarded);
+    snapshot.inc(SimulationReport.Place.EXPIRED, update.discarded);
 
     return snapshot;
   }

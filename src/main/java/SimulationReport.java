@@ -36,6 +36,11 @@ public class SimulationReport {
     }
 
     /** @return Number of orders got discarded */
+    public int getExpired() {
+      return placements.getOrDefault(Place.EXPIRED, 0);
+    }
+
+    /** @return Number of orders got discarded */
     public int getTrash() {
       return placements.getOrDefault(Place.TRASH, 0);
     }
@@ -51,7 +56,8 @@ public class SimulationReport {
     COLD_SHELF("COLD_SHELF"),
     FROZEN_SHELF("FROZEN_SHELF"),
     OVERFLOW_SHELF("OVERFLOW_SHELF"),
-    DELIVERY("DELIVERY"),
+    DELIVERY("DELIVERED"),
+    EXPIRED("EXPIRED"),
     TRASH("TRASH"),
     UNKNOWN("UNKNOWN");
 
