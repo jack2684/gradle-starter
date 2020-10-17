@@ -1,4 +1,5 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.Resources;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -66,7 +67,8 @@ public class Main {
     return cliArgs;
   }
 
-  private static Shelf[] initShelves() {
+  @VisibleForTesting
+  protected static Shelf[] initShelves() {
     Shelf[] shelves = new Shelf[4];
     shelves[0] = Shelf.HOT_SHELF;
     shelves[1] = Shelf.COLD_SHELF;

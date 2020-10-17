@@ -18,7 +18,7 @@ ext.vcsUrl = 'https://github.com/int128/gradle-starter.git'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-mainClassName             = 'Main'
+mainClassName = 'Main'
 applicationDefaultJvmArgs = ['-Xms512m', '-Xmx512m']
 
 repositories {
@@ -45,6 +45,14 @@ dependencies {
 
     // https://mvnrepository.com/artifact/me.tongfei/progressbar
     compile group: 'me.tongfei', name: 'progressbar', version: '0.9.0'
+
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.4.2')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.2')
+}
+
+test {
+    useJUnitPlatform()
 }
 
 /*
@@ -99,7 +107,7 @@ publishing {
 
 bintray {
     user = project.findProperty('bintrayUser')
-    key  = project.findProperty('bintrayKey')
+    key = project.findProperty('bintrayKey')
     publications = ['maven']
     pkg {
         repo = 'maven'

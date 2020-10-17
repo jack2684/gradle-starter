@@ -21,7 +21,7 @@ public class Shelf {
   /** Decay rate affected by shelf */
   int shelfDecayModifier;
 
-  @Setter LinkedList<Order> orders;
+  LinkedList<Order> orders;
 
   static ShelfBuilder Builder = new Shelf.ShelfBuilder();
 

@@ -6,7 +6,10 @@ public class OrderManager {
   private final Shelf[] shelves;
 
   /**
-   * return how many were discarded due to overflow
+   * return how many were discarded due to overflow.
+   *
+   * <p>TODO: optimize the efficiency if needed. (currently we got only 4 shelves, it's ok to just
+   * loop through all of them)
    */
   public int assign(Order order) {
     // Put on a suitable shelf
@@ -59,7 +62,8 @@ public class OrderManager {
     return true;
   }
 
-  SimulationReport.Place temp2Place(Temp temp) {
+  /** Tranlate shelf temperature into places */
+  private SimulationReport.Place temp2Place(Temp temp) {
     switch (temp) {
       case ANY:
         return SimulationReport.Place.OVERFLOW_SHELF;
