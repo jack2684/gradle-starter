@@ -1,8 +1,6 @@
 import lombok.Builder;
 
-/**
- * ShelfManager in charge of order assignment
- */
+/** ShelfManager in charge of order assignment */
 @Builder
 public class OrderManager {
   private final Shelf[] shelves;
@@ -26,11 +24,31 @@ public class OrderManager {
    * @param t current time
    * @return
    */
-  public int updatePickedUpAndExpired(long t) {
-    int cnt = 0;
+  public SimulationReport.Snapshot updateDeliveryAndExpired(long t) {
+    OrderUpdate update = new OrderUpdate();
+    SimulationReport.Snapshot snapshot = new SimulationReport.Snapshot(t);
     for (Shelf shelf : shelves) {
-      cnt += shelf.updatePickedUpAndExpired(t);
+      update.merge(shelf.updateDeliveryAndExpired(t));
+      snapshot.inc(temp2Place(shelf.getTemp()), shelf.size());
     }
-    return cnt;
+
+    snapshot.inc(SimulationReport.Place.DELIVERY, update.pickedUp);
+    snapshot.inc(SimulationReport.Place.TRASH, update.discarded);
+
+    return snapshot;
+  }
+
+  SimulationReport.Place temp2Place(Temp temp) {
+    switch (temp) {
+      case ANY:
+        return SimulationReport.Place.OVERFLOW_SHELF;
+      case HOT:
+        return SimulationReport.Place.HOT_SHELF;
+      case FROZEN:
+        return SimulationReport.Place.FROZEN_SHELF;
+      case COLD:
+        return SimulationReport.Place.COLD_SHELF;
+    }
+    return SimulationReport.Place.UNKNOWN;
   }
 }

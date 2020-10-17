@@ -1,4 +1,5 @@
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -11,7 +12,7 @@ public class Shelf {
   String name;
 
   /** What temperature of food is allowed to put on this shelf */
-  Temp temp;
+  @Getter Temp temp;
 
   int capacity;
 
@@ -71,6 +72,13 @@ public class Shelf {
     orders.offer(order);
   }
 
+  /**
+   * Number of orders on this shelf
+   */
+  public int size() {
+    return orders.size();
+  }
+
   /** Whether the shelf type fits the order tmp property */
   public boolean typeMatch(Order order) {
     return temp == order.getBasic().getTemp();
@@ -92,12 +100,12 @@ public class Shelf {
    * @param t current time
    * @return number of orders that are removed
    */
-  public int updatePickedUpAndExpired(long t) {
+  public OrderUpdate updateDeliveryAndExpired(long t) {
     LinkedList<Order> keeping = new LinkedList<>();
-    int removed = 0;
+    OrderUpdate res = new OrderUpdate();
     for (Order order : orders) {
       if (t >= order.getPickupTime()) {
-        removed++;
+        res.pickedUp++;
         continue; // Not keeping this order
       }
 
@@ -109,7 +117,7 @@ public class Shelf {
 
       // Float comparison, doesn't have to be exact zero
       if (val < 1E-6) {
-        removed++;
+        res.discarded++;
         continue;
       }
 
@@ -117,6 +125,6 @@ public class Shelf {
       keeping.add(order);
     }
     orders = keeping;
-    return removed;
+    return res;
   }
 }

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class Main {
@@ -21,29 +22,40 @@ public class Main {
   @Data
   @NoArgsConstructor
   static class CliArgs {
-    /**
-     * Volume of incoming order
-     */
+    /** Volume of incoming order */
     float ingestionRate = DEFAULT_INGESTION_RATE;
   }
 
   public static void main(String[] args) throws IOException {
-    log.info("=========Reading CLI inputs=========");
+    System.out.println("=========Reading CLI inputs=========");
     CliArgs cliArgs = parseArg(args);
+    sectionEnd();
 
-    log.info("Order ingestion rate: {}/sec", cliArgs);
+    System.out.printf("Order ingestion rate: %s/sec%n", cliArgs);
 
-    log.info("=========Loading Orders=========");
+    System.out.println("=========Loading Orders=========");
     OrderBasic[] orders = loadOrders();
-    log.info("Load orders done. Number of orders: {}", orders.length);
+    System.out.printf("Load orders done. Number of orders: %s%n", orders.length);
+    sectionEnd();
 
-    log.info("=========Initiating Shelves=========");
+    System.out.println("=========Initiating Shelves=========");
     Shelf[] shelves = initShelves();
-    log.info("Initiating shelves done: " + Arrays.toString(shelves));
+    System.out.println(
+        "Initiating shelves done: \n"
+            + Arrays.stream(shelves).map(Shelf::toString).collect(Collectors.joining("\n")));
     OrderManager manager = OrderManager.builder().shelves(shelves).build();
+    sectionEnd();
 
-    log.info("=========Simulation Being=========");
-    Simulation.init(manager, orders, cliArgs.getIngestionRate()).run();
+    System.out.println("=========Simulation Started=========");
+    Simulation sim = Simulation.init(manager, orders, cliArgs.getIngestionRate());
+    sim.run();
+    sectionEnd();
+
+    System.out.println("=========Printing Report=========");
+    sim.printReport();
+    sectionEnd();
+
+    System.out.println("=========Done=========");
   }
 
   private static CliArgs parseArg(String[] args) {
@@ -73,5 +85,9 @@ public class Main {
 
     log.debug("First order: " + orders[0]);
     return orders;
+  }
+
+  private static void sectionEnd() {
+    System.out.println();
   }
 }

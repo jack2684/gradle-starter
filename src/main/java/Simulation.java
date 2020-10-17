@@ -11,6 +11,7 @@ public class Simulation {
   OrderManager manager;
   OrderBasic[] orders;
   float ingestionRate;
+  SimulationReport report;
 
   /** Time of the simulation */
   long t;
@@ -25,19 +26,19 @@ public class Simulation {
         .ingestionRate(ingestionRate)
         .t(0)
         .bucket(ingestionRate)
+        .report(new SimulationReport())
         .build();
   }
 
   /** Run simulation */
   public void run() {
     LinkedList<OrderBasic> orderQueue = new LinkedList<>(Arrays.asList(orders));
-
     try (ProgressBar pb = new ProgressBar("Simulation", orderQueue.size())) {
       int orderCompleted = 0;
       while (!orderQueue.isEmpty()) {
         // 1. Update states of shelves and orders based on t,
         // either the order is expired or picked up
-        removeCompletedOrders(pb);
+        updateCompletedOrders(pb);
 
         // 2. Poll order based on ingestion rate, controlled by bucket
         pollAndAssignOrder(orderQueue);
@@ -48,25 +49,57 @@ public class Simulation {
     }
   }
 
+  public void printReport() {
+    String base = "%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t";
+    System.out.printf(
+        (base) + "%n",
+        "TIME",
+        SimulationReport.Place.HOT_SHELF,
+        SimulationReport.Place.COLD_SHELF,
+        SimulationReport.Place.FROZEN_SHELF,
+        SimulationReport.Place.OVERFLOW_SHELF,
+        SimulationReport.Place.DELIVERY,
+        SimulationReport.Place.TRASH);
+    for (SimulationReport.Snapshot snapshot : report.getSnapshots()) {
+      System.out.printf(
+          (base) + "%n",
+          snapshot.getT(),
+          snapshot.getPlacements().get(SimulationReport.Place.HOT_SHELF),
+          snapshot.getPlacements().get(SimulationReport.Place.COLD_SHELF),
+          snapshot.getPlacements().get(SimulationReport.Place.FROZEN_SHELF),
+          snapshot.getPlacements().get(SimulationReport.Place.OVERFLOW_SHELF),
+          snapshot.getPlacements().get(SimulationReport.Place.DELIVERY),
+          snapshot.getPlacements().get(SimulationReport.Place.TRASH));
+    }
+  }
+
   /**
    * @return number of order completed
    * @param pb
    */
-  private int removeCompletedOrders(ProgressBar pb) {
-    int completed = manager.updatePickedUpAndExpired(t);
-    pb.stepBy(completed);
-    return completed;
+  private SimulationReport.Snapshot updateCompletedOrders(ProgressBar pb) {
+    // Update all orders based on time t
+    SimulationReport.Snapshot snapshot = manager.updateDeliveryAndExpired(t);
+
+    // Accumulate the delivery and trash from last snapshot
+    SimulationReport.Snapshot last = report.lastSnapshot();
+    snapshot.inc(SimulationReport.Place.DELIVERY, last.getDelivery());
+    snapshot.inc(SimulationReport.Place.TRASH, last.getTrash());
+    report.addSnapshot(snapshot);
+
+    pb.stepTo(snapshot.getDelivery() + snapshot.getTrash());
+    return snapshot;
   }
 
   @SneakyThrows
   private void timeInc() {
     t++;
     bucket += ingestionRate;
-    Thread.sleep(1_000);
+        Thread.sleep(1_000);
   }
 
   private void pollAndAssignOrder(LinkedList<OrderBasic> orderQueue) {
-    while (bucket > 0) {
+    while (bucket > 0 && !orderQueue.isEmpty()) {
       OrderBasic next = orderQueue.poll();
       long pickupWait = ThreadLocalRandom.current().nextLong(4) + 2; // Wait for 2-6 sec for pickup
       Order order = Order.builder().basic(next).orderTime(t).pickupTime(t + pickupWait).build();

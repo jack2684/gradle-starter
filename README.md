@@ -11,5 +11,5 @@ Getting Started
 
 Or, run with customized order ingestion rate `gw run --args='$rate'`. Example:
 ```
-gw run --args='10'
+./gradlew run --args='10'
 ```
