@@ -1,4 +1,4 @@
-package simulation;
+package data;
 
 public enum Place {
   HOT_SHELF("HOT_SHELF"),

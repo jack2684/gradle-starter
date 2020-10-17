@@ -5,8 +5,8 @@ import data.Order;
 import data.OrderUpdate;
 import data.Temp;
 import lombok.Builder;
-import simulation.Place;
-import simulation.Snapshot;
+import data.Place;
+import data.Snapshot;
 
 /** ShelfManager in charge of order assignment */
 @Builder

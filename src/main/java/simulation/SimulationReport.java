@@ -1,5 +1,6 @@
 package simulation;
 
+import data.Snapshot;
 import lombok.Getter;
 
 import java.util.ArrayList;

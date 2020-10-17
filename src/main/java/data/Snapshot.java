@@ -1,4 +1,4 @@
-package simulation;
+package data;
 
 import lombok.Getter;
 

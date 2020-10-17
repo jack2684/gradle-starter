@@ -2,6 +2,7 @@ package core;
 
 import data.Order;
 import data.OrderBasic;
+import data.Snapshot;
 import data.Temp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,13 +15,16 @@ public class OrderManagerTest {
   Shelf[] shelves;
   OrderManager manager;
   Order dummyHotOrder;
+  Order dummyExpireOrder;
+
+  static final int PICKUP_TIME = 2;
 
   @BeforeEach
   public void setup() {
     shelves = OrderManager.initShelves();
     manager = OrderManager.builder().shelves(shelves).build();
 
-    dummyHotOrder =
+    Order.OrderBuilder orderBuilder =
         Order.builder()
             .basic(
                 OrderBasic.builder()
@@ -31,8 +35,10 @@ public class OrderManagerTest {
                     .decayRate(0.45f)
                     .build())
             .orderTime(0)
-            .pickupTime(2)
-            .build();
+            .pickupTime(PICKUP_TIME);
+
+    dummyHotOrder = orderBuilder.build();
+    dummyExpireOrder = orderBuilder.pickupTime(Long.MAX_VALUE).build();
   }
 
   Shelf getHotShelf() {
@@ -111,5 +117,21 @@ public class OrderManagerTest {
     assertTrue(
         "Expect overflow shelf has latest order even after it is overflown",
         getOverflowShelf().containsOrder(dummyHotOrder));
+  }
+
+  @Test
+  public void updateDelivery() {
+    manager.assign(dummyHotOrder);
+    Snapshot snapshot = manager.updateDeliveryAndExpired(PICKUP_TIME + 1);
+
+    assertEquals(1, snapshot.getDelivery());
+  }
+
+  @Test
+  public void updateExpire() {
+    manager.assign(dummyExpireOrder);
+    Snapshot snapshot = manager.updateDeliveryAndExpired(Long.MAX_VALUE - 1);
+
+    assertEquals(1, snapshot.getExpired());
   }
 }

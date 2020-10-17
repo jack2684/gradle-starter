@@ -56,7 +56,7 @@ public class ShelfTest {
   @Test
   void properlyExpire() {
     hotShelf.put(dummyExpireOrder);
-    hotShelf.updateDeliveryAndExpired(Long.MAX_VALUE);
+    hotShelf.updateDeliveryAndExpired(Long.MAX_VALUE - 1);
     assertEquals("All Shelves should be empty after long time", 0, hotShelf.size());
   }
 }

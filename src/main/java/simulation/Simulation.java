@@ -3,6 +3,8 @@ package simulation;
 import data.Order;
 import data.OrderBasic;
 import core.OrderManager;
+import data.Place;
+import data.Snapshot;
 import lombok.Builder;
 import lombok.SneakyThrows;
 import me.tongfei.progressbar.ProgressBar;
