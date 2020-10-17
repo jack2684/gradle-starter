@@ -1,6 +1,9 @@
 package core;
 
 import com.google.common.annotations.VisibleForTesting;
+import data.Order;
+import data.OrderUpdate;
+import data.Temp;
 import lombok.Builder;
 import simulation.Place;
 import simulation.Snapshot;
@@ -52,8 +55,8 @@ public class OrderManager {
       snapshot.inc(temp2Place(shelf.getTemp()), shelf.size());
     }
 
-    snapshot.inc(Place.DELIVERY, update.pickedUp);
-    snapshot.inc(Place.EXPIRED, update.discarded);
+    snapshot.inc(Place.DELIVERY, update.getPickedUp());
+    snapshot.inc(Place.EXPIRED, update.getDiscarded());
 
     return snapshot;
   }
@@ -89,5 +92,16 @@ public class OrderManager {
         return Place.COLD_SHELF;
     }
     return Place.UNKNOWN;
+  }
+
+
+  @VisibleForTesting
+  public static Shelf[] initShelves() {
+    Shelf[] shelves = new Shelf[4];
+    shelves[0] = Shelf.createHotShelf();
+    shelves[1] = Shelf.createColdShelf();
+    shelves[2] = Shelf.createFrozenShelf();
+    shelves[3] = Shelf.createOverflowShelf();
+    return shelves;
   }
 }

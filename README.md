@@ -1,4 +1,4 @@
-core.Order simulation 
+data.Order simulation 
 ==================
 Author: Junjie Guan
 
@@ -24,7 +24,7 @@ Disabling Carbon Black and Crowd Strike...
 > Task :run
 =========Reading CLI inputs=========
 
-core.Order ingestion rate: Main.CliArgs(ingestionRate=20.0)/sec
+data.Order ingestion rate: Main.CliArgs(ingestionRate=20.0)/sec
 =========Loading Orders=========
 Load orders done. Number of orders: 132
 
@@ -36,7 +36,7 @@ core.Shelf(name=Frozen core.Shelf, temp=FROZEN, capacity=10, shelfDecayModifier=
 core.Shelf(name=Overflow core.Shelf, temp=ANY, capacity=15, shelfDecayModifier=2, orders=[])
 
 =========simulation.Simulation Started=========
-core.Order simulation.Simulation 100% │████████████████│ 132/132 (0:00:01 / 0:00:00)
+data.Order simulation.Simulation 100% │████████████████│ 132/132 (0:00:01 / 0:00:00)
 
 =========Printing Report=========
  TIME   HOT_SHELF  COLD_SHELF   FROZEN_SHELF  OVERFLOW_SHELF | DELIVERED   EXPIRED  TRASH |COMPLETED

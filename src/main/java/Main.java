@@ -1,7 +1,6 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.Resources;
-import core.OrderBasic;
+import data.OrderBasic;
 import core.OrderManager;
 import core.Shelf;
 import lombok.Data;
@@ -33,7 +32,7 @@ public class Main {
     CliArgs cliArgs = parseArg(args);
     sectionEnd();
 
-    System.out.printf("core.Order ingestion rate: %s/sec%n", cliArgs);
+    System.out.printf("data.Order ingestion rate: %s/sec%n", cliArgs);
 
     System.out.println("=========Loading Orders=========");
     OrderBasic[] orders = loadOrders();
@@ -41,7 +40,7 @@ public class Main {
     sectionEnd();
 
     System.out.println("=========Initiating Shelves=========");
-    Shelf[] shelves = Simulation.initShelves();
+    Shelf[] shelves = OrderManager.initShelves();
     System.out.println(
         "Initiating shelves done: \n"
             + Arrays.stream(shelves).map(Shelf::toString).collect(Collectors.joining("\n")));

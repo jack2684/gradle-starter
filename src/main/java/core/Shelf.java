@@ -1,6 +1,9 @@
 package core;
 
 import com.google.common.annotations.VisibleForTesting;
+import data.Order;
+import data.OrderUpdate;
+import data.Temp;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -16,7 +19,8 @@ public class Shelf {
   String name;
 
   /** What temperature of food is allowed to put on this shelf */
-  @Getter Temp temp;
+  @Getter
+  Temp temp;
 
   int capacity;
 
@@ -110,7 +114,7 @@ public class Shelf {
     OrderUpdate res = new OrderUpdate();
     for (Order order : orders) {
       if (t >= order.getPickupTime()) {
-        res.pickedUp++;
+        res.incPickedUp();
         continue; // Not keeping this order
       }
 
@@ -123,7 +127,7 @@ public class Shelf {
       // Float comparison, doesn't have to be exact zero
       log.debug("{} val: {}", order.getBasic().getName(), val);
       if (val < 1E-6) {
-        res.discarded++;
+        res.incDiscarded();
         continue;
       }
 

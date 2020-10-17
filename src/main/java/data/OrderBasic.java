@@ -1,10 +1,10 @@
-package core;
+package data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Value;
 
-/** core.Order class host the basic properties of an order. */
+/** data.Order class host the basic properties of an order. This is used for json deserialization. */
 @Value
 @Builder
 public class OrderBasic {

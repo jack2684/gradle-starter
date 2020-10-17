@@ -1,10 +1,8 @@
 package simulation;
 
-import com.google.common.annotations.VisibleForTesting;
-import core.Order;
-import core.OrderBasic;
+import data.Order;
+import data.OrderBasic;
 import core.OrderManager;
-import core.Shelf;
 import lombok.Builder;
 import lombok.SneakyThrows;
 import me.tongfei.progressbar.ProgressBar;
@@ -45,7 +43,7 @@ public class Simulation {
     LinkedList<OrderBasic> orderQueue = new LinkedList<>(Arrays.asList(orders));
     try (ProgressBar pb =
         new ProgressBar(
-            "core.Order simulation.Simulation",
+            "data.Order simulation.Simulation",
             orders.length,
             100,
             System.err,
@@ -141,13 +139,4 @@ public class Simulation {
     return snapshot;
   }
 
-  @VisibleForTesting
-    public static Shelf[] initShelves() {
-    Shelf[] shelves = new Shelf[4];
-    shelves[0] = Shelf.createHotShelf();
-    shelves[1] = Shelf.createColdShelf();
-    shelves[2] = Shelf.createFrozenShelf();
-    shelves[3] = Shelf.createOverflowShelf();
-    return shelves;
-  }
 }

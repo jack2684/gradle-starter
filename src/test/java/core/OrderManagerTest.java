@@ -1,13 +1,10 @@
 package core;
 
-import core.Order;
-import core.OrderBasic;
-import core.OrderManager;
-import core.Shelf;
-import core.Temp;
+import data.Order;
+import data.OrderBasic;
+import data.Temp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import simulation.Simulation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -20,7 +17,7 @@ public class OrderManagerTest {
 
   @BeforeEach
   public void setup() {
-    shelves = Simulation.initShelves();
+    shelves = OrderManager.initShelves();
     manager = OrderManager.builder().shelves(shelves).build();
 
     dummyHotOrder =
@@ -67,7 +64,7 @@ public class OrderManagerTest {
   void allShelvesEmptyAfterOrderCompleted() {
     manager.assign(dummyHotOrder);
     manager.updateDeliveryAndExpired(Long.MAX_VALUE);
-    assertTrue("All Shelves should be empty at the beginning", manager.isAllShelfEmpty());
+    assertTrue("All Shelves should be empty after long time", manager.isAllShelfEmpty());
   }
 
   @Test
