@@ -66,7 +66,7 @@ public class Shelf {
 
   /** Whether this shelve has capacity left */
   public boolean hasCapacity() {
-    return orders.size() <= capacity;
+    return orders.size() < capacity;
   }
 
   /** Put order onto this shelf */

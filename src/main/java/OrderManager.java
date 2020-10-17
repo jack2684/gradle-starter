@@ -21,9 +21,9 @@ public class OrderManager {
     int discarded = 0;
     for (Shelf shelf : shelves) {
       if (shelf.isOverflowShelf()) {
-        if (!shelf.hasCapacity()) {
+        while (!shelf.hasCapacity()) {
           shelf.randomDiscard();
-          discarded = 1;
+          discarded++;
         }
         shelf.put(order);
         return discarded;
