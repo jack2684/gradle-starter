@@ -2,12 +2,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedList;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Builder
 @ToString
+@Slf4j
 public class Shelf {
   String name;
 
@@ -116,6 +118,7 @@ public class Shelf {
           (shelfLife - orderAge - orderAge * decayRate * shelfDecayModifier) / shelfLife;
 
       // Float comparison, doesn't have to be exact zero
+      log.debug("{} val: {}" , order.getBasic().getName(), val);
       if (val < 1E-6) {
         res.discarded++;
         continue;

@@ -6,14 +6,19 @@ public class OrderManager {
   private final Shelf[] shelves;
 
   public void assign(Order order) {
+    // Put on a suitable shelf
     for (Shelf shelf : shelves) {
-      if (shelf.typeMatch(order) || shelf.isOverflowShelf()) {
+      if (shelf.typeMatch(order) && shelf.hasCapacity()) {
+        shelf.put(order);
+        return;
+      }
+    }
+
+    // If no shelf available, put on overflow shelf
+    for (Shelf shelf : shelves) {
+      if (shelf.isOverflowShelf()) {
         if (!shelf.hasCapacity()) {
-          if (shelf.isOverflowShelf()) {
-            shelf.randomDiscard();
-          } else {
-            continue; // Skip this shelf
-          }
+          shelf.randomDiscard();
         }
         shelf.put(order);
       }

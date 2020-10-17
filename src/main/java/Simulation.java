@@ -49,7 +49,8 @@ public class Simulation {
   }
 
   public void printReport() {
-    String base = "%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s";
+//    String base = "%8s\t%8s\t%8s\t%8s\t%8s\t%8s\t%8s";
+    String base = "%5s%12s%12s%15s%16s   |%10s%7s";
     System.out.printf(
         (base) + "%n",
         "TIME",
