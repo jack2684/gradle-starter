@@ -35,7 +35,7 @@ public class SimulationReport {
       return placements.getOrDefault(Place.DELIVERY, 0);
     }
 
-    /** @return Number of orders got discarded */
+    /** @return Number of orders expired */
     public int getExpired() {
       return placements.getOrDefault(Place.EXPIRED, 0);
     }
@@ -43,6 +43,11 @@ public class SimulationReport {
     /** @return Number of orders got discarded */
     public int getTrash() {
       return placements.getOrDefault(Place.TRASH, 0);
+    }
+
+    /** @return Number of orders completed */
+    public int getCompleted() {
+      return getTrash() + getDelivery() + getExpired();
     }
 
     /** Take snapshot */
@@ -59,6 +64,7 @@ public class SimulationReport {
     DELIVERY("DELIVERED"),
     EXPIRED("EXPIRED"),
     TRASH("TRASH"),
+    COMPLETED("COMPLETED"),
     UNKNOWN("UNKNOWN");
 
     private final String text;

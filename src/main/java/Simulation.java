@@ -73,12 +73,13 @@ public class Simulation {
     snapshot.inc(SimulationReport.Place.DELIVERY, last.getDelivery());
     snapshot.inc(SimulationReport.Place.EXPIRED, last.getExpired());
     snapshot.inc(SimulationReport.Place.TRASH, last.getTrash());
-    pb.stepTo(snapshot.getDelivery() + snapshot.getExpired() + snapshot.getTrash());
+    snapshot.inc(SimulationReport.Place.COMPLETED, snapshot.getCompleted());
+    pb.stepTo(snapshot.getCompleted());
     report.addSnapshot(snapshot);
   }
 
   public void printReport() {
-    String base = "%5s%12s%12s%15s%16s   |%10s%10s%7s";
+    String base = "%5s%12s%12s%15s%16s |%10s%10s%7s |%7s";
     System.out.printf(
         (base) + "%n",
         "TIME",
@@ -88,7 +89,8 @@ public class Simulation {
         SimulationReport.Place.OVERFLOW_SHELF,
         SimulationReport.Place.DELIVERY,
         SimulationReport.Place.EXPIRED,
-        SimulationReport.Place.TRASH);
+        SimulationReport.Place.TRASH,
+        SimulationReport.Place.COMPLETED);
     for (SimulationReport.Snapshot snapshot : report.getSnapshots()) {
       System.out.printf(
           (base) + "%n",
@@ -99,7 +101,8 @@ public class Simulation {
           snapshot.getPlacements().get(SimulationReport.Place.OVERFLOW_SHELF),
           snapshot.getPlacements().get(SimulationReport.Place.DELIVERY),
           snapshot.getPlacements().get(SimulationReport.Place.EXPIRED),
-          snapshot.getPlacements().get(SimulationReport.Place.TRASH));
+          snapshot.getPlacements().get(SimulationReport.Place.TRASH),
+          snapshot.getPlacements().get(SimulationReport.Place.COMPLETED));
     }
   }
 
