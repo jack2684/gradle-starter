@@ -38,6 +38,15 @@ public class OrderManager {
     return snapshot;
   }
 
+  public boolean isAllShelfEmpty() {
+    for (Shelf shelf : shelves) {
+      if (shelf.size() != 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   SimulationReport.Place temp2Place(Temp temp) {
     switch (temp) {
       case ANY:

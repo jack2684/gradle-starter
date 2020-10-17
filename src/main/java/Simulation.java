@@ -34,8 +34,7 @@ public class Simulation {
   public void run() {
     LinkedList<OrderBasic> orderQueue = new LinkedList<>(Arrays.asList(orders));
     try (ProgressBar pb = new ProgressBar("Simulation", orderQueue.size())) {
-      int orderCompleted = 0;
-      while (!orderQueue.isEmpty()) {
+      while (!orderQueue.isEmpty() || !manager.isAllShelfEmpty()) {
         // 1. Update states of shelves and orders based on t,
         // either the order is expired or picked up
         updateCompletedOrders(pb);
@@ -50,7 +49,7 @@ public class Simulation {
   }
 
   public void printReport() {
-    String base = "%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t";
+    String base = "%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s";
     System.out.printf(
         (base) + "%n",
         "TIME",
@@ -95,7 +94,7 @@ public class Simulation {
   private void timeInc() {
     t++;
     bucket += ingestionRate;
-        Thread.sleep(1_000);
+//        Thread.sleep(1_000);
   }
 
   private void pollAndAssignOrder(LinkedList<OrderBasic> orderQueue) {
