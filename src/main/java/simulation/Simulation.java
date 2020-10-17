@@ -49,7 +49,7 @@ public class Simulation {
             orders.length,
             100,
             System.err,
-            ProgressBarStyle.COLORFUL_UNICODE_BLOCK,
+            ProgressBarStyle.UNICODE_BLOCK,
             "",
             1,
             false,

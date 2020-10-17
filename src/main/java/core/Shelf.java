@@ -19,8 +19,7 @@ public class Shelf {
   String name;
 
   /** What temperature of food is allowed to put on this shelf */
-  @Getter
-  Temp temp;
+  @Getter Temp temp;
 
   int capacity;
 
@@ -34,7 +33,7 @@ public class Shelf {
   /** ======= PUBLIC CONSTANTS ======= */
   public static Shelf createHotShelf() {
     return Shelf.builder()
-        .name("Hot core.Shelf")
+        .name("Hot Shelf")
         .temp(Temp.HOT)
         .capacity(10)
         .shelfDecayModifier(1)
@@ -43,8 +42,8 @@ public class Shelf {
   }
 
   public static Shelf createColdShelf() {
-    return       Shelf.builder()
-        .name("Cold core.Shelf")
+    return Shelf.builder()
+        .name("Cold Shelf")
         .temp(Temp.COLD)
         .capacity(10)
         .shelfDecayModifier(1)
@@ -53,17 +52,18 @@ public class Shelf {
   }
 
   public static Shelf createFrozenShelf() {
-    return             Shelf.builder()
-        .name("Frozen core.Shelf")
+    return Shelf.builder()
+        .name("Frozen Shelf")
         .temp(Temp.FROZEN)
         .capacity(10)
         .shelfDecayModifier(1)
         .orders(new LinkedList<>())
         .build();
   }
+
   public static Shelf createOverflowShelf() {
-    return                  Shelf.builder()
-        .name("Overflow core.Shelf")
+    return Shelf.builder()
+        .name("Overflow Shelf")
         .temp(Temp.ANY)
         .capacity(15)
         .shelfDecayModifier(2)
