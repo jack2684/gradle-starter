@@ -1,3 +1,10 @@
+package simulation;
+
+import com.google.common.annotations.VisibleForTesting;
+import core.Order;
+import core.OrderBasic;
+import core.OrderManager;
+import core.Shelf;
 import lombok.Builder;
 import lombok.SneakyThrows;
 import me.tongfei.progressbar.ProgressBar;
@@ -38,7 +45,7 @@ public class Simulation {
     LinkedList<OrderBasic> orderQueue = new LinkedList<>(Arrays.asList(orders));
     try (ProgressBar pb =
         new ProgressBar(
-            "Order Simulation",
+            "core.Order simulation.Simulation",
             orders.length,
             100,
             System.err,
@@ -53,7 +60,7 @@ public class Simulation {
       while (!orderQueue.isEmpty() || !manager.isAllShelfEmpty()) {
         // 1. Update states of shelves and orders based on t,
         // either the order is expired or picked up
-        SimulationReport.Snapshot snapshot = updateCompletedOrders();
+        Snapshot snapshot = updateCompletedOrders();
 
         // 2. Poll order based on ingestion rate, controlled by bucket
         snapshot = pollAndAssignOrder(orderQueue, snapshot);
@@ -67,13 +74,13 @@ public class Simulation {
     }
   }
 
-  private void storeSnapshot(SimulationReport.Snapshot snapshot, ProgressBar pb) {
+  private void storeSnapshot(Snapshot snapshot, ProgressBar pb) {
     // Accumulate the delivery and expiration from last snapshot
-    SimulationReport.Snapshot last = report.lastSnapshot();
-    snapshot.inc(SimulationReport.Place.DELIVERY, last.getDelivery());
-    snapshot.inc(SimulationReport.Place.EXPIRED, last.getExpired());
-    snapshot.inc(SimulationReport.Place.TRASH, last.getTrash());
-    snapshot.inc(SimulationReport.Place.COMPLETED, snapshot.getCompleted());
+    Snapshot last = report.lastSnapshot();
+    snapshot.inc(Place.DELIVERY, last.getDelivery());
+    snapshot.inc(Place.EXPIRED, last.getExpired());
+    snapshot.inc(Place.TRASH, last.getTrash());
+    snapshot.inc(Place.COMPLETED, snapshot.getCompleted());
     pb.stepTo(snapshot.getCompleted());
     report.addSnapshot(snapshot);
   }
@@ -83,33 +90,33 @@ public class Simulation {
     System.out.printf(
         (base) + "%n",
         "TIME",
-        SimulationReport.Place.HOT_SHELF,
-        SimulationReport.Place.COLD_SHELF,
-        SimulationReport.Place.FROZEN_SHELF,
-        SimulationReport.Place.OVERFLOW_SHELF,
-        SimulationReport.Place.DELIVERY,
-        SimulationReport.Place.EXPIRED,
-        SimulationReport.Place.TRASH,
-        SimulationReport.Place.COMPLETED);
-    for (SimulationReport.Snapshot snapshot : report.getSnapshots()) {
+        Place.HOT_SHELF,
+        Place.COLD_SHELF,
+        Place.FROZEN_SHELF,
+        Place.OVERFLOW_SHELF,
+        Place.DELIVERY,
+        Place.EXPIRED,
+        Place.TRASH,
+        Place.COMPLETED);
+    for (Snapshot snapshot : report.getSnapshots()) {
       System.out.printf(
           (base) + "%n",
           snapshot.getT(),
-          snapshot.getPlacements().get(SimulationReport.Place.HOT_SHELF),
-          snapshot.getPlacements().get(SimulationReport.Place.COLD_SHELF),
-          snapshot.getPlacements().get(SimulationReport.Place.FROZEN_SHELF),
-          snapshot.getPlacements().get(SimulationReport.Place.OVERFLOW_SHELF),
-          snapshot.getPlacements().get(SimulationReport.Place.DELIVERY),
-          snapshot.getPlacements().get(SimulationReport.Place.EXPIRED),
-          snapshot.getPlacements().get(SimulationReport.Place.TRASH),
-          snapshot.getPlacements().get(SimulationReport.Place.COMPLETED));
+          snapshot.getPlacements().get(Place.HOT_SHELF),
+          snapshot.getPlacements().get(Place.COLD_SHELF),
+          snapshot.getPlacements().get(Place.FROZEN_SHELF),
+          snapshot.getPlacements().get(Place.OVERFLOW_SHELF),
+          snapshot.getPlacements().get(Place.DELIVERY),
+          snapshot.getPlacements().get(Place.EXPIRED),
+          snapshot.getPlacements().get(Place.TRASH),
+          snapshot.getPlacements().get(Place.COMPLETED));
     }
   }
 
   /** @return number of order completed */
-  private SimulationReport.Snapshot updateCompletedOrders() {
+  private Snapshot updateCompletedOrders() {
     // Update all orders based on time t
-    SimulationReport.Snapshot snapshot = manager.updateDeliveryAndExpired(t);
+    Snapshot snapshot = manager.updateDeliveryAndExpired(t);
     return snapshot;
   }
 
@@ -120,17 +127,27 @@ public class Simulation {
     Thread.sleep(100); // 10x of real world time
   }
 
-  private SimulationReport.Snapshot pollAndAssignOrder(
-      LinkedList<OrderBasic> orderQueue, SimulationReport.Snapshot snapshot) {
+  private Snapshot pollAndAssignOrder(
+      LinkedList<OrderBasic> orderQueue, Snapshot snapshot) {
     while (bucket > 0 && !orderQueue.isEmpty()) {
       OrderBasic next = orderQueue.poll();
       long pickupWait = ThreadLocalRandom.current().nextLong(4) + 2; // Wait for 2-6 sec for pickup
       Order order = Order.builder().basic(next).orderTime(t).pickupTime(t + pickupWait).build();
       int overflowDiscard = manager.assign(order);
-      snapshot.inc(SimulationReport.Place.TRASH, overflowDiscard);
+      snapshot.inc(Place.TRASH, overflowDiscard);
       bucket--;
     }
 
     return snapshot;
+  }
+
+  @VisibleForTesting
+    public static Shelf[] initShelves() {
+    Shelf[] shelves = new Shelf[4];
+    shelves[0] = Shelf.createHotShelf();
+    shelves[1] = Shelf.createColdShelf();
+    shelves[2] = Shelf.createFrozenShelf();
+    shelves[3] = Shelf.createOverflowShelf();
+    return shelves;
   }
 }

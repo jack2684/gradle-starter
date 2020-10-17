@@ -1,6 +1,8 @@
+package core;
+
+import com.google.common.annotations.VisibleForTesting;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,41 +28,44 @@ public class Shelf {
   static ShelfBuilder Builder = new Shelf.ShelfBuilder();
 
   /** ======= PUBLIC CONSTANTS ======= */
-  public static final Shelf HOT_SHELF =
-      Shelf.builder()
-          .name("Hot Shelf")
-          .temp(Temp.HOT)
-          .capacity(10)
-          .shelfDecayModifier(1)
-          .orders(new LinkedList<>())
-          .build();
+  public static Shelf createHotShelf() {
+    return Shelf.builder()
+        .name("Hot core.Shelf")
+        .temp(Temp.HOT)
+        .capacity(10)
+        .shelfDecayModifier(1)
+        .orders(new LinkedList<>())
+        .build();
+  }
 
-  public static final Shelf COLD_SHELF =
-      Shelf.builder()
-          .name("Cold Shelf")
-          .temp(Temp.COLD)
-          .capacity(10)
-          .shelfDecayModifier(1)
-          .orders(new LinkedList<>())
-          .build();
+  public static Shelf createColdShelf() {
+    return       Shelf.builder()
+        .name("Cold core.Shelf")
+        .temp(Temp.COLD)
+        .capacity(10)
+        .shelfDecayModifier(1)
+        .orders(new LinkedList<>())
+        .build();
+  }
 
-  public static final Shelf FROZEN_SHELF =
-      Shelf.builder()
-          .name("Frozen Shelf")
-          .temp(Temp.FROZEN)
-          .capacity(10)
-          .shelfDecayModifier(1)
-          .orders(new LinkedList<>())
-          .build();
-
-  public static final Shelf OVERFLOW_SHELF =
-      Shelf.builder()
-          .name("Overflow Shelf")
-          .temp(Temp.ANY)
-          .capacity(15)
-          .shelfDecayModifier(2)
-          .orders(new LinkedList<>())
-          .build();
+  public static Shelf createFrozenShelf() {
+    return             Shelf.builder()
+        .name("Frozen core.Shelf")
+        .temp(Temp.FROZEN)
+        .capacity(10)
+        .shelfDecayModifier(1)
+        .orders(new LinkedList<>())
+        .build();
+  }
+  public static Shelf createOverflowShelf() {
+    return                  Shelf.builder()
+        .name("Overflow core.Shelf")
+        .temp(Temp.ANY)
+        .capacity(15)
+        .shelfDecayModifier(2)
+        .orders(new LinkedList<>())
+        .build();
+  }
 
   /** ======= PUBLIC METHODS ======= */
 
@@ -74,9 +79,7 @@ public class Shelf {
     orders.offer(order);
   }
 
-  /**
-   * Number of orders on this shelf
-   */
+  /** Number of orders on this shelf */
   public int size() {
     return orders.size();
   }
@@ -118,7 +121,7 @@ public class Shelf {
           (shelfLife - orderAge - orderAge * decayRate * shelfDecayModifier) / shelfLife;
 
       // Float comparison, doesn't have to be exact zero
-      log.debug("{} val: {}" , order.getBasic().getName(), val);
+      log.debug("{} val: {}", order.getBasic().getName(), val);
       if (val < 1E-6) {
         res.discarded++;
         continue;
@@ -129,5 +132,15 @@ public class Shelf {
     }
     orders = keeping;
     return res;
+  }
+
+  @VisibleForTesting
+  boolean containsOrder(Order o) {
+    for (Order order : orders) {
+      if (o.equals(order)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

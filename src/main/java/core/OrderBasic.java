@@ -1,8 +1,10 @@
+package core;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Value;
 
-/** Order class host the basic properties of an order. */
+/** core.Order class host the basic properties of an order. */
 @Value
 @Builder
 public class OrderBasic {
@@ -15,7 +17,7 @@ public class OrderBasic {
   @JsonProperty("temp")
   Temp temp;
 
-  /** Shelf wait max duration (seconds) */
+  /** core.Shelf wait max duration (seconds) */
   @JsonProperty("shelfLife")
   int shelfLife;
 

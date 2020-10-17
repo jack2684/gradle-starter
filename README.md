@@ -1,4 +1,4 @@
-Order simulation 
+core.Order simulation 
 ==================
 Author: Junjie Guan
 
@@ -24,19 +24,19 @@ Disabling Carbon Black and Crowd Strike...
 > Task :run
 =========Reading CLI inputs=========
 
-Order ingestion rate: Main.CliArgs(ingestionRate=20.0)/sec
+core.Order ingestion rate: Main.CliArgs(ingestionRate=20.0)/sec
 =========Loading Orders=========
 Load orders done. Number of orders: 132
 
 =========Initiating Shelves=========
 Initiating shelves done:
-Shelf(name=Hot Shelf, temp=HOT, capacity=10, shelfDecayModifier=1, orders=[])
-Shelf(name=Cold Shelf, temp=COLD, capacity=10, shelfDecayModifier=1, orders=[])
-Shelf(name=Frozen Shelf, temp=FROZEN, capacity=10, shelfDecayModifier=1, orders=[])
-Shelf(name=Overflow Shelf, temp=ANY, capacity=15, shelfDecayModifier=2, orders=[])
+core.Shelf(name=Hot core.Shelf, temp=HOT, capacity=10, shelfDecayModifier=1, orders=[])
+core.Shelf(name=Cold core.Shelf, temp=COLD, capacity=10, shelfDecayModifier=1, orders=[])
+core.Shelf(name=Frozen core.Shelf, temp=FROZEN, capacity=10, shelfDecayModifier=1, orders=[])
+core.Shelf(name=Overflow core.Shelf, temp=ANY, capacity=15, shelfDecayModifier=2, orders=[])
 
-=========Simulation Started=========
-Order Simulation 100% │████████████████│ 132/132 (0:00:01 / 0:00:00)
+=========simulation.Simulation Started=========
+core.Order simulation.Simulation 100% │████████████████│ 132/132 (0:00:01 / 0:00:00)
 
 =========Printing Report=========
  TIME   HOT_SHELF  COLD_SHELF   FROZEN_SHELF  OVERFLOW_SHELF | DELIVERED   EXPIRED  TRASH |COMPLETED

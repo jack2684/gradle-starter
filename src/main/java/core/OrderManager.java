@@ -1,4 +1,9 @@
+package core;
+
+import com.google.common.annotations.VisibleForTesting;
 import lombok.Builder;
+import simulation.Place;
+import simulation.Snapshot;
 
 /** ShelfManager in charge of order assignment */
 @Builder
@@ -39,16 +44,16 @@ public class OrderManager {
    * @param t current time
    * @return
    */
-  public SimulationReport.Snapshot updateDeliveryAndExpired(long t) {
+  public Snapshot updateDeliveryAndExpired(long t) {
     OrderUpdate update = new OrderUpdate();
-    SimulationReport.Snapshot snapshot = new SimulationReport.Snapshot(t);
+    Snapshot snapshot = new Snapshot(t);
     for (Shelf shelf : shelves) {
       update.merge(shelf.updateDeliveryAndExpired(t));
       snapshot.inc(temp2Place(shelf.getTemp()), shelf.size());
     }
 
-    snapshot.inc(SimulationReport.Place.DELIVERY, update.pickedUp);
-    snapshot.inc(SimulationReport.Place.EXPIRED, update.discarded);
+    snapshot.inc(Place.DELIVERY, update.pickedUp);
+    snapshot.inc(Place.EXPIRED, update.discarded);
 
     return snapshot;
   }
@@ -62,18 +67,27 @@ public class OrderManager {
     return true;
   }
 
+  @VisibleForTesting
+  int totalAssigned() {
+    int cnt = 0;
+    for (Shelf shelf : shelves) {
+      cnt += shelf.size();
+    }
+    return cnt;
+  }
+
   /** Tranlate shelf temperature into places */
-  private SimulationReport.Place temp2Place(Temp temp) {
+  private Place temp2Place(Temp temp) {
     switch (temp) {
       case ANY:
-        return SimulationReport.Place.OVERFLOW_SHELF;
+        return Place.OVERFLOW_SHELF;
       case HOT:
-        return SimulationReport.Place.HOT_SHELF;
+        return Place.HOT_SHELF;
       case FROZEN:
-        return SimulationReport.Place.FROZEN_SHELF;
+        return Place.FROZEN_SHELF;
       case COLD:
-        return SimulationReport.Place.COLD_SHELF;
+        return Place.COLD_SHELF;
     }
-    return SimulationReport.Place.UNKNOWN;
+    return Place.UNKNOWN;
   }
 }
